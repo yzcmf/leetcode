@@ -1,0 +1,40 @@
+202. Happy Number
+
+Write an algorithm to determine if a number is "happy".
+
+A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+
+Example: 19 is a happy number
+
+    12 + 92 = 82
+    82 + 22 = 68
+    62 + 82 = 100
+    12 + 02 + 02 = 1
+
+
+class Solution {
+public:
+    bool isHappy(int n) {
+        if(n<=0) return false;
+        set<int>s;
+        //We could also use 关于非快乐数有个特点，循环的数字中必定会有4
+        //Then do not use the set and add n!=4 inside the while loop;
+        while(n!=1)
+        {
+          int res=0;
+          while(n)
+          {
+              res += (n%10)*(n%10);
+              n /= 10;
+          }
+          n = res;
+          if(s.count(n)) break;//Find if the element inside the set<int>,break;
+          else
+          {
+              s.insert(n); //set<int>: will sort the element;
+          }
+        }
+        
+        return n==1;
+    }
+};

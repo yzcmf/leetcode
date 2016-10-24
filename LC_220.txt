@@ -1,0 +1,36 @@
+220. Contains Duplicate III
+
+Given an array of integers, find out whether there are two distinct indices i and j in the array such that the difference between nums[i] and nums[j] is at most t and the difference between i and j is at most k. 
+
+/*
+这里有两个限制条件，两个数字的坐标差不能大于k，值差不能大于t。
+这里需要两个指针i和j，刚开始i和j都指向0,然后i开始向右走遍历数组,如果i和j之差大于k,且ht中有nums[j],则删除并j加一。
+这样保证了ht中所有的数的下标之差都不大于k,然后我们用map数据结构的lower_bound()函数来找一个特定范围,
+就是大于或等于nums[i]-t的地方,所有小于这个阈值的数和nums[i]的差的绝对值会大于t (可自行带数检验)。
+然后检测后面的所有的数字,如果数的差的绝对值小于等于t,则返回true。最后遍历完整个数组返回false。
+*/
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        map<int,int>ht;
+        int j=0;
+        for (int i=0;i<nums.size();i++) {
+            if (i-j>k && ht[nums[j]] == j) ht.erase(nums[j++]);
+            //如果i和j之差大于k,且ht中有nums[j],则删除并j加一。
+            //这样保证了ht中所有的数的下标之差都不大于k
+            auto a = ht.lower_bound(nums[i] - t);//a is the pointer itr, it points to the ht function's position.
+            //然后我们用map数据结构的lower_bound()函数来找一个特定范围,input a number,return the itr's index;
+            //就是大于或等于nums[i]-t的地方,所有小于这个阈值的数和nums[i]的差的绝对值会大于t 
+            //If nums[j] < nums[i]-t =>  nums[i] - nums[j] > t;
+            if (a != ht.end() && abs(a->first-nums[i])<= t) return true;
+            ht[nums[i]] = i;
+        }
+        return false;
+    }
+};
+//http://www.cnblogs.com/grandyang/p/4545261.html
+//http://www.cplusplus.com/reference/algorithm/lower_bound/
+//10 10 10 20 20 20 30 30
+//low=std::lower_bound (v.begin(), v.end(), 20);
+//std::cout << "lower_bound at position " << (low- v.begin()) << '\n';
+//lower_bound at position 3;

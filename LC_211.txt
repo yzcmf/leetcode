@@ -1,0 +1,105 @@
+211. Add and Search Word - Data structure design
+
+Design a data structure that supports the following two operations:
+
+void addWord(word)
+bool search(word)
+
+search(word) can search a literal word or a regular expression string containing only letters a-z or .. A . means it can represent any one letter.
+
+For example:
+
+addWord("bad")
+addWord("dad")
+addWord("mad")
+search("pad") -> false
+search("bad") -> true
+search(".ad") -> true
+search("b..") -> true
+
+Note:
+You may assume that all words are consist of lowercase letters a-z. 
+
+class TrieNode
+{
+public:
+    TrieNode* children[26];
+    bool end;
+    TrieNode()
+    {
+        for(int i = 0; i < 26; i ++)
+            children[i] = NULL;
+        end = false;
+    }
+};
+
+class WordDictionary {
+public:
+    WordDictionary()
+    {
+        root = new TrieNode();
+    }
+    
+    // Adds a word into the data structure.
+    void addWord(string word) {
+        TrieNode* cur = root;
+        int i = 0;
+        while(i < word.size() && cur->children[word[i]-'a'] != NULL)
+        {
+            cur = cur->children[word[i]-'a'];
+            i++;
+        }
+        if(i == word.size())
+            cur->end = true;
+        else
+        {
+            while(i < word.size())
+            {
+                cur->children[word[i]-'a'] = new TrieNode();
+                cur = cur->children[word[i]-'a'];
+                i ++;
+            }
+            cur->end = true;
+        }
+    }
+
+    // Returns if the word is in the data structure. A word could
+    // contain the dot character '.' to represent any one letter.
+    bool search(string word) {
+        return search(word, root);
+    }
+    
+    bool search(string word, TrieNode* cur)
+    {
+        if(cur == NULL)
+            return false;
+        else if(word == "")
+            return (cur->end == true);
+        else
+        {
+            if(word[0] != '.')
+            {
+                if(cur->children[word[0]-'a'] == NULL)
+                    return false;
+                else
+                    return search(word.substr(1), cur->children[word[0]-'a']);
+            }
+            else
+            {
+                for(int i = 0; i < 26; i ++)
+                {
+                    if(search(word.substr(1), cur->children[i]))
+                        return true;
+                }
+                return false;
+            }
+        }
+    }
+    
+    TrieNode* root;
+};
+//http://www.cnblogs.com/ganganloveu/p/4615336.html
+// Your WordDictionary object will be instantiated and called as such:
+// WordDictionary wordDictionary;
+// wordDictionary.addWord("word");
+// wordDictionary.search("pattern");

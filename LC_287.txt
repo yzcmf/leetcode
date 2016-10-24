@@ -1,0 +1,55 @@
+287. Find the Duplicate Number
+
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+Note:
+
+    You must not modify the array (assume the array is read only).
+    You must use only constant, O(1) extra space.
+    Your runtime complexity should be less than O(n2).
+    There is only one duplicate number in the array, but it could be repeated more than once.
+
+// Time:O(nlogn);
+// Space:O(1);
+// class Solution {
+// public:
+//     int findDuplicate(vector<int>& nums) {
+//         int res;
+//         sort(nums.begin(),nums.end());
+//         for(int i=0;i<nums.size();i++)
+//         {
+//             if(nums[i] == nums[i-1] && i>0)
+//             {
+//             res=nums[i];
+//             break;
+//             }
+//         }
+//         return res;
+//     }
+// };
+/*
+无序数组的题目如果要O(n)解法往往要用到hash table，
+但这题要求constant space。所以可以用数组本身作为一个"hash table"：
+A[0] = 1, A[1] = 2, .... A[n-1] = n。目标是尽可能将数字i放到数组第i-1个位置。
+扫描数组中每个数：
+1. 如果A[i]<1或者A[i]>n。说明A[i]一定不是first missing positive。跳过
+2. 如果A[i] = i+1，说明A[i]已经在正确的位置，跳过
+3. 如果A[i]!=i+1，且0<A[i]<=n，应当将A[i]放到A[A[i]-1]的位置，所以可以交换两数。
+这里注意，当A[i] = A[A[i]-1]时会陷入死循环。这种情况下直接跳过。
+*/
+// Time:O(n);
+// Space:O(1);
+//nums is 1~n;
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        if(nums.size() == 0) return 0;
+        int i = 0;
+        while(i < nums.size()){
+            if(nums[i] == i + 1) {i++; continue;}
+            if(nums[nums[i] - 1] == nums[i]) return nums[i];
+            else swap(nums[i], nums[nums[i] - 1]);
+        }
+        return 0;
+    }
+};

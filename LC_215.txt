@@ -1,0 +1,105 @@
+215. Kth Largest Element in an Array
+
+Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+For example,
+Given [3,2,1,5,6,4] and k = 2, return 5.
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ array's length.
+
+Credits:
+Special thanks to @mithmatt for adding this problem and creating all test cases.
+
+//sort -- O(nlogn)
+//priority queue -- O(n)
+//quick select -- O(n)
+//priority_queue -- Time:O(n);Space:O(n);
+// class Solution {
+// public:
+// int findKthLargest(vector<int>& nums, int k){
+//       struct compare  
+//       {  
+//         bool operator()(const int& l, const int& r)  
+//         {
+//          return l > r;//Front->End:Large->Small;
+//         }
+//       }; 
+//       priority_queue<int,vector<int>,compare>queue;
+//       for(int i=0;i<nums.size();i++)
+//       {
+//         if(queue.size()<k) queue.push(nums[i]);//when less than k members
+//         else if(queue.top()<nums[i])
+//         {
+//           queue.pop();
+//           queue.push(nums[i]);
+//         }
+//       }
+//       return queue.top(); // -- queue.front();
+//     }
+// };
+//priority_queue reference:
+//http://www.cplusplus.com/reference/queue/priority_queue/priority_queue/
+//http://www.cplusplus.com/reference/queue/priority_queue/
+//http://www.cplusplus.com/reference/queue/priority_queue/top/
+// ---- Lintcode/Leetcode;
+// class Solution {
+// public:
+//  int findKthLargest(vector<int>&nums, int k){
+//     if(nums.empty()) return 0;
+//     if(nums.size() == 1) return nums[0];
+//     return quickselect(nums,0,nums.size()-1,k);
+//  }
+// private:
+// int quickselect(vector<int>&nums,int left,int right,int k)
+// {
+//     //Note : i and pivot here are just for the index operations for the program
+//     int pivot=right;
+//     int i=left;
+//     for(int j=left;j<right;j++)
+//     {
+        
+//         if(nums[j]>nums[pivot])
+//         {
+//         swap(nums[i],nums[j]);
+//         i++;
+//         }
+//     }
+//     // After that , the elements before the index pivot is greater then pivot 
+//     // Which is for left - (i-1);
+//     if(nums[i]<nums[pivot]) swap(nums[i],nums[pivot]);
+//     // Compare the nums[i] with the nums[pivot] as well;
+//     // Now from left - i ; the elements are greatest than the other right ones;
+//     // The numbers that are greatest than the other right ones are i-left+1;
+//     if (i-left+1==k) return nums[i];
+//     if (i-left+1<k)  return quickselect(nums,i+1,right,k-(i-left+1));
+//     if (i-left+1>k)  return quickselect(nums,left,i-1,k);
+// }    
+// };
+/*
+利用快排的思想，平均时间复杂度O(n)，4ms AC。
+最坏情况下会退化成O(n^2)，比如说数组是从小到大排好序的而要找的是最大值。
+非递归,空间复杂度O(1)。
+*/
+class Solution {
+  public:
+      int findKthLargest(vector<int>& nums, int k) {
+          int L = 0, R = nums.size() - 1;
+          while (L < R){
+              int left = L, right = R;
+              int key = nums[left];
+              while (left < right) {
+                 while (left < right && nums[right] < key) right--;
+                 nums[left] = nums[right];
+                 while (left < right && nums[left] >= key) left++;
+                 nums[right] = nums[left];
+             }
+             nums[left] = key;
+             if (left == k - 1) return nums[k - 1];
+             else if (left > k - 1) R = left - 1;
+             else L = left + 1;
+         }
+         return nums[k-1];
+     }
+};
+//http://www.cnblogs.com/easonliu/p/4523941.html

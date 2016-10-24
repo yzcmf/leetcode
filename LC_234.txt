@@ -1,0 +1,50 @@
+234. Palindrome Linked List
+
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+
+// -- Time:O(n);
+// -- Space:O(1);
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+      if(head == NULL || head->next == NULL) return true;  
+      ListNode* fast = head , *slow =head;
+      //Using this style next time;
+      while (fast->next && fast->next->next)
+      {
+        fast = fast->next->next;
+        slow = slow->next;
+      }
+      
+      if(fast->next == NULL)  fast = slow->next; 
+      // If the node is odd, skip the middle node;
+      else 
+      fast=slow->next;
+      //We can see no matter how, slow->next will point to the begining of the second half;
+      slow = head;// now fast is in the middle and slow is the head;
+
+      // reverse the post-half nodes
+      ListNode* secHead = NULL;
+    
+      while(fast)
+      {
+        ListNode* r = fast->next;
+        fast->next =secHead;
+        secHead = fast;
+        fast =r;
+      }
+      
+      //Comparsion the two-parts;
+      fast = secHead;
+      while(fast)
+      {
+        if(fast->val != slow->val) return false;
+        fast=fast->next;
+        slow=slow->next;
+      }
+      return true;
+    }
+};

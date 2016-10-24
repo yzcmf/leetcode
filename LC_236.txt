@@ -1,0 +1,31 @@
+236. Lowest Common Ancestor of a Binary Tree
+
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow a node to be a descendant of itself).”
+
+        _______3______
+       /              \
+    ___5__          ___1__
+   /      \        /      \
+   6      _2       0       8
+         /  \
+         7   4
+
+For example, the lowest common ancestor (LCA) of nodes 5 and 1 is 3. Another example is LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* A, TreeNode* B) {
+         //Return either A or B or NULL
+        if ( root == NULL || root == A || root == B) return root;
+        TreeNode *left = lowestCommonAncestor(root->left, A, B);
+        TreeNode *right = lowestCommonAncestor(root->right, A, B);
+        //A and B are on both sides
+        if (left != NULL && right != NULL) return root;
+        //Either left or right or NULL
+        if (left != NULL) return left;
+        if (right != NULL) return right;
+        return NULL;
+    }
+};

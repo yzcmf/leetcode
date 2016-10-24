@@ -1,0 +1,18 @@
+231. Power of Two
+
+Given an integer, write a function to determine if it is a power of two.
+
+Credits:
+Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
+
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        if(n<=0) return false;
+        return (n&(n-1))==0;
+    }
+};
+//如果是power of two, 则2进制表达中,有且仅有一个1.可以通过移位来数1的个数, 这里用了一个巧妙的办法, 即判断N & (N-1)是否为0.
+//Method 1: Common Method: divided 2 each time;
+//Method 2: n & 1 == 1 ; and n >> 1; Thus: 1000 & 0001 ; 100 & 0001 ;10 & 0001 ; 1 & 0001 ==1 ; Ok, true.
+//Method 3: n & (n-1) == 0 ; Thus : 1000 & 0111 == 0 , true;

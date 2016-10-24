@@ -1,0 +1,39 @@
+290. Word Pattern
+
+Given a pattern and a string str, find if str follows the same pattern.
+
+Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in str.
+
+Examples:
+
+    pattern = "abba", str = "dog cat cat dog" should return true.
+    pattern = "abba", str = "dog cat cat fish" should return false.
+    pattern = "aaaa", str = "dog cat cat dog" should return false.
+    pattern = "abba", str = "dog dog dog dog" should return false.
+
+Notes:
+You may assume pattern contains only lowercase letters, and str contains lowercase letters separated by a single space. 
+
+/*
+当然这道题也可以用两个哈希表来完成，分别将字符和单词都映射到当前的位置，那么我们在遇到新字符和单词时，
+首先看两个哈希表是否至少有一个映射存在，如果有一个存在，则比较两个哈希表映射值是否相同，不同则返回false。
+如果两个表都不存在映射，则同时添加两个映射
+*/
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        map<char, int> m1;
+        map<string, int> m2;
+        istringstream in(str);
+        int i = 0;
+        for (string word; in >> word; i++) {
+            if (m1.find(pattern[i]) != m1.end() || m2.find(word) != m2.end()) {
+                if (m1[pattern[i]] != m2[word]) return false;
+            } else {
+                m1[pattern[i]] = m2[word] = i + 1;
+            }
+        }
+        return i == pattern.size();
+    }
+};
+//http://www.cnblogs.com/grandyang/p/4857022.html

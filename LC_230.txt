@@ -1,0 +1,58 @@
+230. Kth Smallest Element in a BST
+
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+
+Follow up:
+What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+
+Hint:
+
+    Try to utilize the property of a BST.
+
+//http://wangyouwen.cn/2016/05/08/Kth-Smallest-Element-in-a-BST/
+//Using the priority_queue<TreeNode*> or stack<TreeNode*> -- BFS; Space:O(n);
+// -- this is a BST, which means it has been sorted;
+// BT: the maxium height of the tree and minium height of the tree should no more than 1;
+// -- recrusion method;
+// class Solution {
+// private:
+// int cnt = 0;
+// int res = 0;
+// public:
+//     int kthSmallest(TreeNode* root, int k) {
+//         if(root->left != NULL) kthSmallest(root->left,k);
+//         cnt++; if(cnt == k) res = root->val;
+//         if(root->right != NULL) kthSmallest(root->right,k);
+//         return res;
+//     }
+// };
+//--- stack method
+class Solution {
+    int cnt = 0;
+    int res = 0;
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        stack<TreeNode*> s;
+        TreeNode *p=root;
+        while(p!=NULL||!s.empty())
+        {
+            while(p!=NULL)
+            {
+                s.push(p);
+                p=p->left;
+            }
+            if(!s.empty())
+            {
+                p=s.top();
+                cnt++;
+                if(cnt == k) res = p->val;
+                s.pop();
+                p=p->right;
+            }
+        }    
+        return res;
+    }
+};

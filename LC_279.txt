@@ -1,0 +1,27 @@
+279. Perfect Squares
+
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9. 
+
+class Solution {
+public:
+    int numSquares(int n) {
+        while(n%4 == 0) n/=4;
+        //如果一个数除以8余7的话，那么肯定是由4个完全平方数组成
+        if(n%8 == 7) return 4;
+        //下面我们就来尝试的将其拆为两个平方数之和，如果拆成功了那么就会返回1或2，因为其中一个平方数可能为0. 
+        for(int a=0;a*a<=n;a++)
+        {
+            int b = sqrt(n-a*a);
+            if(a*a + b*b == n)
+            return !!a + !!b;
+            //感叹号!表示逻辑取反，那么一个正整数逻辑取反为0，再取反为1
+            //所以用两个感叹号!!的作用就是看a和b是否为正整数，都为正整数的话返回2;
+            //只有一个是正整数的话返回1;     
+        }
+        return 3;
+    }
+};
+//http://www.cnblogs.com/grandyang/p/4800552.html
+//完全平方定理：一个数一定可以用不超过4个的平方数构成；
