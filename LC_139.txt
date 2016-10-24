@@ -1,0 +1,38 @@
+139. Word Break
+
+Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+For example, given
+s = "leetcode",
+dict = ["leet", "code"].
+
+Return true because "leetcode" can be segmented as "leet code". 
+
+class Solution {
+public:
+    bool wordBreak(string s, unordered_set<string>&dict) {
+        int len=s.size();
+        if (len==0) return true;
+        if (dict.size()==0) return false;
+        
+        int maxLen=0;
+        for(string str:dict)
+        if(str.size()>maxLen) 
+        maxLen=str.size();
+
+        vector<bool>res(len+1,false);
+        res[0]=true;
+        
+        for(int i=1;i<=len;i++){
+            for(int j=i-1;j>=0;j--){
+                if(i-j>maxLen) break;
+                bool flag= res[j] && dict.find(s.substr(j,i-j))!=dict.end();
+                if(flag){
+                    res[i]=true;//s[0:j-1]可以被break, 即res[i] = true;
+                    break;
+                }
+            }
+        }
+        return res[len];
+    }
+};

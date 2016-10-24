@@ -1,0 +1,43 @@
+124. Binary Tree Maximum Path Sum
+
+Given a binary tree, find the maximum path sum.
+
+For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path does not need to go through the root.
+
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+
+Return 6. 
+
+class Solution {
+public:
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer
+     */
+    int maxPathSum(TreeNode *root) {
+        // write your code here
+        int max_sum=INT_MIN;
+        int ps1_root = findmaxPathSum(root,max_sum);
+        return max_sum;
+    }
+    int findmaxPathSum(TreeNode *root,int& max_sum)
+    {
+        if(root == NULL) return 0;
+        int ps1_left=0, ps1_right=0;
+        
+        if(root->left) ps1_left = max(findmaxPathSum(root->left,max_sum),0);
+        if(root->right) ps1_right =max(findmaxPathSum(root->right,max_sum),0);
+        
+        int ps1_root = max(ps1_left,ps1_right) + root->val;
+        int ps2_root = ps1_left + ps1_right + root->val;
+        
+        max_sum = max(max_sum,max(ps1_root,ps2_root));
+        return ps1_root;//---Should be ps1_root, can't use the LCA root for the last root's calculation;
+    }
+};
+//A good reference: http://bangbingsyb.blogspot.com/2014/11/leetcode-binary-tree-maximum-path-sum.html

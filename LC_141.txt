@@ -1,0 +1,32 @@
+141. Linked List Cycle
+
+Given a linked list, determine if it has a cycle in it.
+
+Follow up:
+Can you solve it without using extra space? 
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(head== NULL || head->next == NULL) return false;
+        ListNode* fast = head->next;
+        ListNode* slow = head;
+        
+        while(fast && fast->next)
+        {
+            if(fast == slow) return true;
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        return false;
+    }
+};
+//http://bangbingsyb.blogspot.com/2014/11/leetcode-linked-list-cycle-i-ii.html

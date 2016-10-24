@@ -1,0 +1,46 @@
+138. Copy List with Random Pointer
+
+A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+
+Return a deep copy of the list. 
+
+//间接使用哈希表 -- http://www.kancloud.cn/kancloud/data-structure-and-algorithm-notes/73016
+// -- Time :O(n)  
+// -- Space:O(1)
+class Solution {
+public:
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if(head == NULL) return NULL;
+        RandomListNode * cur = head;
+        //1.generate new List with node
+        while(cur != NULL)
+        {
+            RandomListNode *newNode = new RandomListNode(cur->label);
+            newNode->next = cur->next;
+            cur->next = newNode;
+            cur = cur->next->next;
+        }
+        //2. copy random
+        cur = head;
+        while(cur != NULL)
+        {
+            if(cur->random != NULL)
+            {
+              cur->next->random = cur->random->next;
+            }
+            cur = cur->next->next;
+        }
+        //3. split origianl and new List;
+        RandomListNode *newHead = head->next;
+        cur = head;
+        while(cur!=NULL)
+        {
+            RandomListNode* newNode = cur->next;
+            cur->next = cur->next->next;
+            cur = cur->next;
+            if(newNode->next != NULL)
+            newNode->next = newNode->next->next;
+        }
+        return newHead;
+    }
+};

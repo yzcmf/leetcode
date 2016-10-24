@@ -1,0 +1,60 @@
+113. Path Sum II
+
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+For example:
+Given the below binary tree and sum = 22,
+
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+
+return
+
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+
+
+class Solution {
+public:
+vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        vector<vector<int>>allSol;
+        vector<int>Sol;
+        if(root == NULL) return allSol;
+        DFS(allSol,Sol,root,sum);
+        return allSol;
+}
+void DFS(vector<vector<int>> &allSol,vector<int> &Sol,TreeNode* root,int sum)
+{
+        if(root == NULL) return;
+        if(root->left==NULL && root->right==NULL)//到达叶子节点，形成合法路径，这时候再对路径进行验证
+        {
+            Sol.push_back(root->val);//叶子节点纳入当前路径
+            if(sumOfPath(Sol) == sum)//检验路径是否满足约束
+            allSol.push_back(Sol);
+            Sol.pop_back();//弹出当前路径末端数据并返回
+            return;
+        }
+        else
+        {
+            Sol.push_back(root->val);//中序遍历的构架
+            DFS(allSol,Sol,root->left,sum);
+            DFS(allSol,Sol,root->right,sum);
+            Sol.pop_back();//某一根节点的子节点搜索完毕，末端数据弹出，返回上一层
+        }
+}
+int sumOfPath(vector<int>&dataSet)//求取路径和
+{
+        int sum=0;
+        for(int i=0;i<dataSet.size();i++)
+        {
+            sum+=dataSet[i];
+        }
+        return sum;
+}
+};

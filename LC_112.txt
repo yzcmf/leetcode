@@ -1,0 +1,53 @@
+112. Path Sum
+
+Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+For example:
+Given the below binary tree and sum = 22,
+
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \      \
+        7    2      1
+
+return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
+
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        //---recurision method; 
+        // if(root == NULL) return false;  
+        // if(root->left == NULL && root->right == NULL) return sum == root->val;  
+        // return hasPathSum(root->left,sum-root->val)||hasPathSum(root->right,sum-root->val);  
+        
+        // --DFS:Using the stack;
+        if(root == NULL) return false;
+        if(root->left == NULL && root->right==NULL)
+        return root->val == sum;
+        stack<TreeNode*> s;
+        s.push(root);
+        TreeNode*p = NULL;
+        while(!s.empty())
+        {
+          p = s.top();
+          s.pop();
+          if( p->left == NULL && p->right==NULL && p->val == sum) return true;
+          else
+          {
+            if(p->right)
+            {
+                p->right->val += p->val;
+                s.push(p->right); //Push the right at first; -- according to the stack;
+            }
+            if(p->left)
+            {
+                p->left->val += p->val;
+                s.push(p->left); // Push the left at second; -- according to the stack;
+            }
+          }
+        } 
+       return false;
+    }
+};

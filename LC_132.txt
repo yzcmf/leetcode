@@ -1,0 +1,44 @@
+132. Palindrome Partitioning II
+
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return the minimum cuts needed for a palindrome partitioning of s.
+
+For example, given s = "aab",
+Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 cut. 
+
+class Solution {
+public:
+    int minCut(string s) {
+        int n=s.size();
+        if(n == 0) return 0;
+        vector<vector<bool>>isPal(n, vector<bool>(n, false));
+        //We use the DP for specific meaning and it's much more convenient than functions;
+        for(int i=n-1;i>=0;i--)
+        {
+            for(int j=i;j<n;j++)
+            {
+                //i+1>j-1:Means 1~2 chars here -- we could optimize to 3;
+                //i+1>=j-1:Means 1~3 chars here -- i~j : at most 3;ex:"aca";
+                if((i+1>=j-1||isPal[i+1][j-1]) && s[i]==s[j]) 
+                 isPal[i][j]=true;
+            }
+        }
+        
+        //DP[i]表示长度为i的prefix：s[0: i-1]的min cut数量。
+        //对所有 0<=j<i，且s[j: i-1]为palindrome
+        //DP[i] = min (DP[j] + 1,DP[i]) 
+        vector<int>DP(n+1,INT_MAX);
+        DP[0] = -1;
+        
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=0;j<=i-1;j++)
+            {
+              if(isPal[j][i-1])    
+              DP[i] = min (DP[j] + 1,DP[i]); 
+            }
+        }
+        return DP[n];
+    }
+};

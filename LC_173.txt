@@ -1,0 +1,53 @@
+173. Binary Search Tree Iterator
+
+Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
+
+Calling next() will return the next smallest number in the BST.
+
+Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
+
+//http://www.makuiyu.cn/2015/04/LeetCode_173.%20Binary%20Search%20Tree%20Iterator/
+//时间复杂度：O(logn)
+//空间复杂度：O(logn)
+/*
+这道题的要求是实现二叉查找树（BST）的迭代器，其中迭代器根据BST的根节点进行初始化，
+调用next()函数将返回BST的下一个最小的数值。要求next()和hasNext()为O(1)时间复杂度，O(h)空间复杂度（h为BST高度)。
+可以注意到，这就是一步一步地进行先序遍历,因此可以采用栈进行存储。
+用栈存储每层未遍历的左子节点，然后hasNext()就是判断栈是否为空。
+每次next()，取出栈顶元素t，即为下一最小元素，同时还需要对t的右子数开始的每层左子节点压入栈。
+*/
+class BSTIterator
+{
+stack<TreeNode*>s;
+public:
+     BSTIterator(TreeNode *root)
+     {
+         pushLeft(root);
+     }
+
+    /** @return whether we have a next smallest number */
+     bool hasNext()
+     {
+         return !s.empty();
+     }
+     
+    /** @return the next smallest number */
+     int next()
+     {
+         TreeNode *temp = s.top();
+         s.pop();
+         pushLeft(temp -> right);
+         return temp -> val;
+     }
+private:
+     void pushLeft(TreeNode *root)
+     {
+         for(TreeNode *p = root; p != NULL; p = p->left)
+         s.push(p);
+     }
+};
+/**
+ * Your BSTIterator will be called like this:
+ * BSTIterator i = BSTIterator(root);
+ * while (i.hasNext()) cout << i.next();
+ */

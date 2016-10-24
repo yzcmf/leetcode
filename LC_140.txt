@@ -1,0 +1,42 @@
+140. Word Break II
+
+Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+
+Return all such possible sentences.
+
+For example, given
+s = "catsanddog",
+dict = ["cat", "cats", "and", "sand", "dog"].
+
+A solution is ["cats and dog", "cat sand dog"].
+
+
+//http://likemyblogger.blogspot.com/2015/04/leetcode-140-word-break-ii.html
+class Solution {
+public:
+vector<string> wordBreak(string s, unordered_set<string>& wordDict) {
+        int n = s.size();
+        vector<vector<int>>DP(n);
+        for(int i=n-1; i>=0;i--){
+            for(int j=i; j<n;j++){
+                string w = s.substr(i, j-i+1);
+                if(wordDict.count(w) && (j==n-1 || !DP[j+1].empty())){
+                    DP[i].push_back(j);
+                }
+            }
+        }
+        vector<string>res;
+        DFS(0,n,"",res,DP,s);
+        return res;
+}
+void DFS(int i, int n, string cur, vector<string> &res, vector<vector<int>>&DP, string s){
+        if(i==n){
+            res.push_back(cur);
+        }else if(i<n){
+            if(!cur.empty()) cur += " ";
+            for(auto j:DP[i]){
+                DFS(j+1,n,cur+s.substr(i,j-i+1),res,DP,s);
+            }
+        }
+    }
+};
