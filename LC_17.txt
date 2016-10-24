@@ -1,0 +1,40 @@
+17. Letter Combinations of a Phone Number 
+
+Given a digit string, return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below.
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+
+//For the complexity: http://www.cnblogs.com/yrbbest/p/4433742.html
+//Time:O(3^n)
+//Space:O(n)
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        string dict[] = {"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        vector<string>allSol;
+        if(digits.empty()) return allSol;
+        string Sol;
+        DFS(digits,Sol,allSol,dict,0);
+        return allSol;
+    }
+    
+     void DFS(string& digits,string& Sol,vector<string>& allSol,string dict[],int len)
+     {
+         if(len == digits.size())  
+         {
+             allSol.push_back(Sol);
+             return;
+         }
+         string s = dict[digits[len]-'2'];
+         for(int i=0;i<s.size();i++)
+         {
+            Sol.push_back(s[i]);
+            DFS(digits,Sol,allSol,dict,len+1);
+            Sol.pop_back();
+         }
+     }
+};

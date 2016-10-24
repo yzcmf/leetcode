@@ -1,0 +1,71 @@
+34. Search for a Range
+
+Given a sorted array of integers, find the starting and ending position of a given target value.
+
+Your algorithm's runtime complexity must be in the order of O(log n).
+
+If the target is not found in the array, return [-1, -1].
+
+For example,
+Given [5, 7, 7, 8, 8, 10] and target value 8,
+return [3, 4]. 
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        if(nums.empty()) return {-1,-1};
+        int low_bound = lowbound(nums,target);
+        int upper_bound = upperbound(nums,target);
+        vector<int>res;
+        if(upper_bound <= nums.size() && upper_bound > low_bound && low_bound>=0)
+        {
+         res.push_back(low_bound);
+         res.push_back(upper_bound-1);
+        }
+        else
+        {
+            res.push_back(-1);
+            res.push_back(-1);
+        }
+        return res;
+    }
+    
+    int lowbound(vector<int>& nums, int target)
+    {
+        int start = 0;//Move the start and pass the mid plus one value to it;
+        int end = nums.size();//Fixed the right and only pass the mid value to it;
+        while(start<end)
+        {
+            int mid = (start+end)/2;
+            if(target<=nums[mid])
+            {
+                end = mid;
+            }
+            else
+            {
+                start = mid+1;
+            }
+        }
+        return start;
+    }
+    
+    int upperbound(vector<int>& nums, int target)
+    {
+        int start = 0;
+        int end = nums.size();
+        while(start<end)
+        {
+            int mid = (start+end)/2;
+            if(target<nums[mid])
+            {
+                end = mid; 
+            }
+            else
+            {
+                start = mid+1;
+            }
+        }
+        return start;
+        
+    }
+};

@@ -1,0 +1,47 @@
+32. Longest Valid Parentheses
+
+Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+
+For "(()", the longest valid parentheses substring is "()", which has length = 2.
+
+Another example is ")()())", where the longest valid parentheses substring is "()()", which has length = 4. 
+
+/*
+思路1：DP
+求极值问题一般想到DP或Greedy，显然Greedy在这里不太适用，只有用DP了。
+1. 状态：
+DP[i]：以s[i-1]为结尾的longest valid parentheses substring的长度。
+2. 通项公式：
+s[i] = '('：
+DP[i] = 0
+s[i] = ')'：找i前一个字符的最长括号串DP[i]的前一个字符j = i-2-DP[i-1]
+DP[i] = DP[i-1] + 2 + DP[j]，如果j >=0，且s[j] = '('
+DP[i] = 0，如果j<0，或s[j] = ')'
+
+......... (     x    x    x    x   ) -- suppose DP[i-1] == 4 here
+          j                      i-2 i-1
+证明：不存在j' < j，且s[j' : i]为valid parentheses substring。
+假如存在这样的j'，则s[j'+1 : i-1]也valid。那么对于i-1来说：
+(    x    x    x    x    x  ---- DP[i-1] == 5 here not 4 so that it's impossible.
+j'  j'+1                  i-1
+这种情况下，i-1是不可能有比S[j'+1 : i-1]更长的valid parentheses substring的。
+3. 计算方向
+显然自左向右，且DP[0] = 0
+*/
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n = s.size(), maxLen = 0;
+        vector<int> dp(n+1,0);
+        for(int i=1; i<=n; i++) {
+            int j = i-2-dp[i-1];
+            if(s[i-1]=='(' || j<0 || s[j]==')') 
+                dp[i] = 0;
+            else {
+                dp[i] = dp[i-1]+2+dp[j];
+                maxLen = max(maxLen, dp[i]);
+            }
+        }
+        return maxLen;
+    }
+};

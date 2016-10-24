@@ -1,0 +1,43 @@
+99. Recover Binary Search Tree
+
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+Note:
+A solution using O(n) space is pretty straight forward. Could you devise a constant space solution? 
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+//Using the vector<TreeNode*>,or stack<TreeNode*> or queue<TreeNode*> method and it takes O(n) space;
+//Time:O(n);
+//Space:O(1);
+class Solution {
+public:
+TreeNode *p,*q;
+TreeNode *prev;
+    void recoverTree(TreeNode *root)
+    {
+        p=q=prev=NULL;
+        inorder(root);
+        swap(p->val,q->val);      
+    }
+    void inorder(TreeNode *root)
+    {
+        if(root->left) inorder(root->left);
+        if(prev!=NULL && (prev->val>root->val))
+        {
+            if(p==NULL)p=prev;
+            q=root;
+        }
+        prev=root;
+        if(root->right) inorder(root->right);
+    }
+};
+//http://blog.csdn.net/liyuefeilong/article/details/49287049

@@ -1,0 +1,33 @@
+67. Add Binary
+
+Given two binary strings, return their sum (also a binary string).
+
+For example,
+a = "11"
+b = "1"
+Return "100". 
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        int carry=0;
+        int ai,bj;
+        char val;
+        string res;
+        for(int i=a.size()-1,j=b.size()-1;i>=0||j>=0;i--,j--)
+        {
+            //Filled out the overlength of a or b to the zeros;
+            ai = i>=0? a[i]-'0':0;
+            bj = j>=0? b[j]-'0':0;
+            
+            carry += ai + bj;
+            val = carry%2+'0';
+            carry /= 2;
+            
+            //Note: the val should be inserted in the front;
+            res.insert(res.begin(),val); 
+        }
+        if(carry == 1) res.insert(res.begin(),'1'); 
+        return res;
+    }
+};

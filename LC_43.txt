@@ -1,0 +1,41 @@
+43. Multiply Strings
+
+Given two numbers represented as strings, return multiplication of the numbers as a string.
+
+Note:
+
+    The numbers can be arbitrarily large and are non-negative.
+    Converting the input string to integer is NOT allowed.
+    You should NOT use internal library such as BigInteger.
+
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        if(num1.empty() || num2.empty()) return "";//The exception handling;
+        reverse(num1.begin(),num1.end());
+        reverse(num2.begin(),num2.end());
+        string res(num1.size()+num2.size(),'0');
+        
+        for(int j=0;j<num2.size();j++)
+        {
+            int carry = 0;
+            int val = num2[j]-'0';
+            for(int i=0;i<num1.size();i++)
+            {
+                carry += val*(num1[i]-'0') + res[j+i]-'0';
+                res[j+i] = carry%10 + '0';
+                carry /=10;
+            }
+            if(carry != 0) res[j+num1.size()] = carry +'0';
+        }
+        
+        reverse(res.begin(),res.end());
+        int cnt = 0;
+        while(res[cnt] == '0' && cnt < res.size()-1) cnt++; // Note:Leave one bit at least;Otherwise the res will become "";
+        res.erase(0,cnt);//string& erase (size_t pos = 0, size_t len = npos);
+        
+        return res;
+    }
+};
+//string& erase (size_t pos = 0, size_t len = npos):http://www.cplusplus.com/reference/string/string/erase/
+//http://bangbingsyb.blogspot.com/2014/11/leetcode-multiply-strings.html

@@ -1,0 +1,51 @@
+40. Combination Sum II
+
+Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+Each number in C may only be used once in the combination.
+
+Note:
+
+    All numbers (including target) will be positive integers.
+    The solution set must not contain duplicate combinations.
+
+For example, given candidate set [10, 1, 2, 7, 6, 1, 5] and target 8,
+A solution set is:
+
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+
+//Time:O(k^n):k is the average len of the Sol in allSol;
+//Space:O(k*n);
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>>allSol;
+        vector<int>Sol;
+        if (candidates.size()==0){return allSol;}
+        sort(candidates.begin(),candidates.end());
+        DFS(allSol,Sol,candidates,target,0);
+        return allSol;
+    }
+    
+    void DFS(vector<vector<int>>&allSol,vector<int>&Sol,vector<int>& candidates, int target,int start)
+    {
+        if(target<0) return;
+        if(target == 0 && find(allSol.begin(),allSol.end(),Sol) == allSol.end()) //Get rid of the duplicated;
+        {
+            allSol.push_back(Sol);
+            return;
+        }
+        for(int i=start;i<candidates.size();i++)
+        {
+            Sol.push_back(candidates[i]);
+            DFS(allSol,Sol,candidates,target-candidates[i],i+1);
+            Sol.pop_back();
+        }
+    }
+};

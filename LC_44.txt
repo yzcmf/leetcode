@@ -1,0 +1,66 @@
+44. Wildcard Matching
+
+    Total Accepted: 72682
+    Total Submissions: 391320
+    Difficulty: Hard
+    Contributors: Admin
+
+Implement wildcard pattern matching with support for '?' and '*'.
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+
+The matching should cover the entire input string (not partial).
+
+The function prototype should be:
+bool isMatch(const char *s, const char *p)
+
+Some examples:
+isMatch("aa","a") → false
+isMatch("aa","aa") → true
+isMatch("aaa","aa") → false
+isMatch("aa", "*") → true
+isMatch("aa", "a*") → true
+isMatch("ab", "?*") → true
+isMatch("aab", "c*a*b") → false
+
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int index = 0;
+        for (int i = 1; i < p.size(); i++) {
+            if ((p[i] == '*') && (p[i] == p[i-1])) continue;
+            p[++index] = p[i];
+        } // -- leave only unique '*';
+        if (index + 1 < p.size()) p.resize(index + 1);
+        // index to star in pattern p
+        int starp = -1;
+        // index s when the corresponding char in pattern p is star
+        int stars = -1;
+        // current pointers to p and s 
+        int ip = 0;
+        int is = 0;
+        while (is < s.size()) {
+            if (ip != p.size() && p[ip] == '*') {
+                starp = ip ++;
+                stars = is;
+                continue;
+            }
+            if (ip != p.size() && (p[ip] == s[is] || p[ip] == '?')) {
+                ip++;
+                is++;
+                continue;
+            }
+            // not match
+            if (starp != -1) {
+                ip =  starp+1; //starp is not changing;
+                is =  ++stars; //stars is changing;
+                continue;
+            }
+            return false;
+        }
+        if(ip < p.size() && p[ip] == '*') ip++;
+        return ip == p.size();
+    }
+};

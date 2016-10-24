@@ -1,0 +1,45 @@
+19. Remove Nth Node From End of List
+
+Given a linked list, remove the nth node from the end of list and return its head.
+
+For example,
+
+   Given linked list: 1->2->3->4->5, and n = 2.
+
+   After removing the second node from the end, the linked list becomes 1->2->3->5.
+
+Note:
+Given n will always be valid.
+Try to do this in one pass.
+ 
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* p = dummy;
+        int len = -1;
+        
+        while(p)
+        {
+            len++;
+            p = p->next;
+        }
+        
+        if(len<n) return dummy->next; //n is illegal;
+        p = dummy;
+        
+        while(len>n)
+        {
+            len--;
+            p = p->next; //p->next will point to the last nth node;
+        }
+        
+        ListNode* t = p->next;
+        p->next = p->next->next;
+        t->next = NULL;
+        delete t;
+        
+        return dummy->next;
+    }
+};

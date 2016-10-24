@@ -1,0 +1,61 @@
+6. ZigZag Conversion
+
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+
+And then read line by line: "PAHNAPLSIIGYIR"
+
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string text, int nRows);
+
+convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR". 
+
+/*
+思路：
+细节实现题，找下规律 。对于 n=5：
+
+0          8                16
+1       7 9           15 17
+2    6   10      14     18 
+3  5     11  13         19
+4         12               20 
+
+对于第2行的数字2 ，经过一个弯折，到达同一行下一个数字6需要经过(5-2-1)*2 = 4个字符。同理，从6出发要到达同行下一个数字10，需要经过(2-0)*2 = 4个数字。
+
+所以对于第i行(i = 0, ... n-1)：
+d1 = (n-i-1)*2, d2 = i*2
+x0 = i
+x1 = x0 + d1
+x2 = x1 + d2 
+x3 = x2 + d1
+x4 = x3 + d2
+...
+Thus:
+d1 = (n-i-1)*2, d2 = i*2
+对于第0行：d2 = 0
+对于第n-1行：d1 = 0
+对于这两个特殊情况，一个zigzag只包含2个字符。而对其他行则有3个字符。
+*/
+class Solution {
+public:
+    string convert(string s, int nRows) {
+        if(nRows<2) return s;
+        string ret;
+        int inc = (nRows-1)*2;  // nRows>1, otherwise infinite while loop
+        for(int i=0; i<nRows; i++) {
+            int j = i, d1 = (nRows-i-1)*2;
+            while(j<s.size()) {
+                ret.push_back(s[j]);
+                if(d1!=0 && d1!=inc && j+d1<s.size()) 
+                    ret.push_back(s[j+d1]);
+                j += inc;
+            }
+        }
+        return ret;
+    }
+};
+//http://bangbingsyb.blogspot.com/2014/11/leetcode-zigzag-conversion.html

@@ -1,0 +1,47 @@
+71. Simplify Path
+
+Given an absolute path for a file (Unix-style), simplify it.
+
+For example,
+path = "/home/", => "/home"
+path = "/a/./b/../../c/", => "/c"
+
+class Solution {
+public:
+    string simplifyPath(string path) {
+        string cur;
+        vector<string>ret;
+        path.push_back('/');
+        
+        for(int i=0;i<path.size();i++)
+        {
+            if(path[i] == '/')
+            {
+                if(cur.empty()) continue;
+                else if(cur == ".") cur.clear();
+                else if(cur == "..")
+                {
+                    if(!ret.empty())
+                    ret.pop_back();
+                    cur.clear();
+                }
+                else
+                {
+                 ret.push_back(cur);
+                 cur.clear();
+                }
+            }
+            else
+            {
+             cur.push_back(path[i]);   
+            }
+        }
+        
+        string res;
+        for(int i=0;i<ret.size();i++)
+        res.append('/' + ret[i]);
+        
+        if(res.empty()) res ="/";
+        return res;
+    }
+};

@@ -1,0 +1,19 @@
+50. Pow(x, n)
+
+Implement pow(x, n). 
+
+// --Divide and conquer;
+//Time:O(logn);
+//Space:O(logn);
+class Solution {
+public:
+    double myPow(double x, int n){
+        if(n == 0) return 1.0;
+        double res = myPow(x,n/2);
+        if(n%2 == 0) return res*res;
+        else if(n>0)
+        return res*res*x;//Always make it like this when(n>0);
+        else 
+        return res*res/x;//Always make it like this when(n<0);
+    }
+};

@@ -1,0 +1,43 @@
+59. Spiral Matrix II
+
+Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+
+For example,
+Given n = 3,
+You should return the following matrix:
+
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+
+
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>>res(n,vector<int>(n,0));
+        int lvl = n/2; //Consider the even circles first;
+        int val = 1;
+        
+        for(int i=0;i<lvl;i++)
+        {
+            int last = n-1-i;
+            //In row i, from col i to col last-1;
+            for(int j=i;j<last;j++)
+            res[i][j] = val++;
+            //In col last, from row i to row last-1;
+            for(int j=i;j<last;j++)
+            res[j][last] = val++;
+            //In col last, from col last to col i+1;
+            for(int j=last;j>i;j--)
+            res[last][j] = val++;
+            //In row last, from row last to row i+1;
+            for(int j=last;j>i;j--)
+            res[j][i] = val++;
+        }
+        
+        if( n % 2 == 1) res[n/2][n/2] = val;
+        return res;
+    }
+};

@@ -1,0 +1,28 @@
+55. Jump Game
+
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Determine if you are able to reach the last index.
+
+For example:
+A = [2,3,1,1,4], return true.
+
+A = [3,2,1,0,4], return false. 
+
+//其中DP[i]表示走道i位置时剩余的还能走的最大步数
+//DP[i] = max(DP[i-1], nums[i-1])-1; 
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        if(nums.empty())return false;
+        vector<int>dp(nums.size(),0);
+        for(int i=1;i<nums.size();i++)
+        {
+            dp[i] = max(dp[i-1],nums[i-1])-1;
+            if(dp[i]<0)return false;
+        }
+        return dp[nums.size()-1]>=0; //Last index;
+    }
+};
